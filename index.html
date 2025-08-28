@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Galaxy Planet</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #ff99ff;
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff99ff, 0 0 20px #ff33cc, 0 0 40px #ff00ff;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chạm vào 🚀</h1>
+  <canvas id="universe"></canvas>
+
+  <script>
+    const canvas = document.getElementById('universe');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // 🌟 Create stars
+    const stars = [];
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: random(0, canvas.width),
+        y: random(0, canvas.height),
+        size: random(0.5, 2),
+        alpha: random(0.5, 1)
+      });
+    }
+
+    function drawStars() {
+      stars.forEach(s => {
+        ctx.globalAlpha = s.alpha;
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    // 🪐 Draw glowing planet
+    function drawPlanet() {
+      const x = canvas.width / 2;
+      const y = canvas.height / 2;
+      const radius = 100;
+
+      // Planet glow
+      const gradient = ctx.createRadialGradient(x, y, 50, x, y, 200);
+      gradient.addColorStop(0, "#ff99ff");
+      gradient.addColorStop(1, "transparent");
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(x, y, radius * 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Planet body
+      ctx.fillStyle = "#ff66cc";
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Planet ring
+      ctx.strokeStyle = "#ff99ff";
+      ctx.shadowColor = "#ff00ff";
+      ctx.shadowBlur = 30;
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.ellipse(x, y, radius + 40, radius - 30, Math.PI / 6, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawStars();
+      drawPlanet();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
